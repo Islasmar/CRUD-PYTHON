@@ -1,18 +1,19 @@
+import models.prestamos
+import schemas.prestamos
 from sqlalchemy.orm import Session
-from models.prestamos import Prestamo, EstadoPrestamo
-from schemas.prestamos import PrestamoCreate, PrestamoUpdate
-
-def get_prestamo(db: Session, id: int):
-    return db.query(Prestamo).filter(Prestamo.id_prestamo == id).first()
+from datetime import datetime
 
 def get_prestamos(db: Session, skip: int = 0, limit: int = 0):
-    return db.query(Prestamo).offset(skip).limit(limit).all()
+    return db.query(models.prestamos.Prestamo).offset(skip).limit(limit).all()
 
-def create_prestamo(db: Session, prestamo: PrestamoCreate):
-    db_prestamo = Prestamo(
+def get_prestamo(db: Session, id: int):
+    return db.query(models.prestamos.Prestamo).filter(models.prestamos.Prestamo.id == id).first()
+
+def create_prestamo(db: Session, prestamo: schemas.prestamos.PrestamoCreate):
+    db_prestamo = models.prestamos.Prestamo(
         id_material=prestamo.id_material,
         id_usuario=prestamo.id_usuario,
-        fecha_prestamo=prestamo.fecha_prestamo,
+        fecha_prestamo=datetime.utcnow(),
         fecha_devolucion=prestamo.fecha_devolucion,
         estado_prestamo=prestamo.estado_prestamo
     )
@@ -21,17 +22,17 @@ def create_prestamo(db: Session, prestamo: PrestamoCreate):
     db.refresh(db_prestamo)
     return db_prestamo
 
-def update_prestamo(db: Session, id: int, prestamo: PrestamoUpdate):
-    db_prestamo = db.query(Prestamo).filter(Prestamo.id_prestamo == id).first()
+def update_prestamo(db: Session, id: int, prestamo: schemas.prestamos.PrestamoUpdate):
+    db_prestamo = db.query(models.prestamos.Prestamo).filter(models.prestamos.Prestamo.id == id).first()
     if db_prestamo:
         for var, value in vars(prestamo).items():
             setattr(db_prestamo, var, value) if value else None
-        db.commit()
-        db.refresh(db_prestamo)
-    return db_prestamo
+            db.commit()
+            db.refresh(db_prestamo)
+        return db_prestamo
 
 def delete_prestamo(db: Session, id: int):
-    db_prestamo = db.query(Prestamo).filter(Prestamo.id_prestamo == id).first()
+    db_prestamo = db.query(models.prestamos.Prestamo).filter(models.prestamos.Prestamo.id == id).first()
     if db_prestamo:
         db.delete(db_prestamo)
         db.commit()

@@ -1,22 +1,27 @@
-from typing import List, Optional
 from pydantic import BaseModel
 from datetime import datetime
+from models.prestamos import Prestamo
+from typing import Optional
 
-# Modelo base para Préstamos
 class PrestamoBase(BaseModel):
-    id_usuario: int  # Clave foránea
-    id_material: int  # Clave foránea
+    id_material: int
+    id_usuario: int
     fecha_prestamo: datetime
     fecha_devolucion: Optional[datetime]
-    estado_prestamo: str  # Activo, Devuelto, Vencido
+    estado_prestamo: str  
 
 class PrestamoCreate(PrestamoBase):
     pass
 
 class PrestamoUpdate(PrestamoBase):
-    pass
+    id_material: Optional[int]
+    id_usuario: Optional[int]
+    fecha_prestamo: Optional[datetime]
+    fecha_devolucion: Optional[datetime]
+    estado_prestamo: Optional[str]
 
 class Prestamo(PrestamoBase):
-    id_prestamo: int
+    id: int
+
     class Config:
-        orm_mode = True
+        from_attributes = True
