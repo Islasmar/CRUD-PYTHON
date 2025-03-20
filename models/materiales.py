@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Enum, DateTime
-from config.db import Base
 from sqlalchemy.orm import relationship
+from config.db import Base
 import enum
 
 class TipoMaterial(str, enum.Enum):
