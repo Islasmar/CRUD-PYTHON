@@ -9,7 +9,9 @@ from typing import List
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
 
-user = APIRouter()
+from fastapi import APIRouter
+
+user = APIRouter(prefix="/users")
 
 SECRET_KEY = "secret"
 ALGORITHM = "HS256"
@@ -45,6 +47,10 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+
+@user.get("/")
+def read_users():
+    return {"message": "Lista de usuarios"}
 
 @user.post("/users/login", response_model=Token, tags=["Usuarios"])
 async def login_for_access_token(user: UserLogin, db: Session = Depends(get_db)):
