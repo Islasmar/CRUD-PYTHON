@@ -9,10 +9,6 @@ from routes.userRoutes import verify_token_simple
 from fastapi import APIRouter
 
 
-
-
-
-
 material = APIRouter(dependencies=[Depends(verify_token_simple)])
 
 models.materiales.Base.metadata.create_all(bind=config.db.engine)
@@ -24,17 +20,11 @@ def get_db():
     finally:
         db.close()
 
-material  = APIRouter(prefix="/materials")
-
 # Obtener materiales
 @material.get("/materials/", response_model=List[schemas.materiales.Material], tags=["Materiales"])
 async def read_materials(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     db_materials = crud.materiales.get_materials(db=db, skip=skip, limit=limit)
     return db_materials
-
-@material.get("/")
-def read_materials():
-    return {"message": "Lista de materiales"}
 
 # Crear material
 @material.post("/materialsCreate/", response_model=schemas.materiales.Material, tags=["Materiales"])

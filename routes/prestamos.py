@@ -8,7 +8,6 @@ from typing import List
 from routes.userRoutes import verify_token_simple
 
 prestamo = APIRouter(dependencies=[Depends(verify_token_simple)])
-prestamo = APIRouter(prefix="/prestamos")
 
 
 models.prestamos.Base.metadata.create_all(bind=config.db.engine)
@@ -20,9 +19,6 @@ def get_db():
     finally:
         db.close()
 
-@prestamo.get("/")
-def read_prestamos():
-    return {"message": "Lista de prestamos"}
 
 # Obtener préstamos
 @prestamo.get("/prestamos/", response_model=List[schemas.prestamos.Prestamo], tags=["Préstamos"])
