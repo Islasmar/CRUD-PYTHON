@@ -1,23 +1,22 @@
 from sqlalchemy import Column, Integer, String, DateTime, Enum
-from config.db import Base
 from sqlalchemy.orm import relationship
-
+from config.base import Base  # ✅ Ahora importamos Base correctamente
 
 import enum
 
 class TipoUsuario(str, enum.Enum):
-	Alumno = "Alumno"
-	Profesor = "Profesor"
-	Secretaria = "Secretaria"
-	Laboratorista = "Laboratorista"
-	Directivo = "Directivo"
-	Administratvo = "Administrativo"
+    Alumno = "Alumno"
+    Profesor = "Profesor"
+    Secretaria = "Secretaria"
+    Laboratorista = "Laboratorista"
+    Directivo = "Directivo"
+    Administratvo = "Administrativo"
 
 class Estatus(str, enum.Enum):
-	Activo = "Activo"
-	Inactivo = "Inactivo"
-	Bloqueado = "Bloqueado"
-	Suspendido = "Suspendido"
+    Activo = "Activo"
+    Inactivo = "Inactivo"
+    Bloqueado = "Bloqueado"
+    Suspendido = "Suspendido"
 
 class User(Base):
     __tablename__ = "tbb_usuarios"
@@ -35,4 +34,3 @@ class User(Base):
     fechaRegistro = Column(DateTime)
     fechaActualizacion = Column(DateTime)
     prestamo = relationship("Prestamo", back_populates="usuario")
-    
